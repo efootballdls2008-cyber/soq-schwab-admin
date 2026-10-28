@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/img/icon.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--
+      Content-Security-Policy: restricts what scripts, styles, and connections
+      this admin panel can load. Tightens the XSS attack surface — even if an
+      attacker injects a script, it cannot load external payloads or exfiltrate
+      data to arbitrary origins.
+
+      Adjust connect-src if your API or WebSocket URL differs from the default.
+    -->
+    <meta http-equiv="Content-Security-Policy"
+          content="
+            default-src 'self';
+            script-src  'self';
+            style-src   'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+            font-src    'self' https://cdnjs.cloudflare.com;
+            img-src     'self' data: blob:;
+            connect-src 'self' http://localhost:3001 http://localhost:3002 ws://localhost:3001 ws://localhost:3002 https://*.railway.app wss://*.railway.app;
+            frame-ancestors 'none';
+          " />
+    <title>Charles Schwab — Admin Panel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
