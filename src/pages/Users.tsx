@@ -162,9 +162,10 @@ export default function Users() {
             <table className="w-full min-w-[700px]">
               <thead>
                 <tr style={{ background: '#1a1040', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                  {['User', 'Email', 'Role', 'Balance', 'Currency', 'KYC', 'Status', 'Actions'].map(h => (
+                  {['User', 'Email', 'Role', 'Balance', 'Currency', 'KYC', 'Actions'].map(h => (
                     <th key={h} className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap" style={{ color: '#6b7280' }}>{h}</th>
                   ))}
+                  <th style={{ display: 'none' }} />
                 </tr>
               </thead>
               <tbody>
@@ -179,10 +180,14 @@ export default function Users() {
                     <tr key={u.id} className="hover:bg-white/[0.02] transition-colors cursor-pointer" style={{ borderTop: '1px solid rgba(255,255,255,0.04)', background: i % 2 === 0 ? 'rgba(255,255,255,0.01)' : 'transparent' }} onClick={() => navigate(`/admin/users/${u.id}`)}>
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0" style={{ background: 'rgba(201,168,76,0.15)', color: '#c9a84c' }}>{initials}</div>
+                          {/* Avatar: initials small at top, id below */}
+                          <div className="w-9 h-9 rounded-full flex flex-col items-center justify-center flex-shrink-0 relative" style={{ background: 'rgba(201,168,76,0.15)', border: '1px solid rgba(201,168,76,0.25)' }}>
+                            <span className="text-[9px] font-bold leading-none" style={{ color: '#c9a84c' }}>{initials}</span>
+                            <span className="text-[7px] leading-none mt-0.5" style={{ color: 'rgba(201,168,76,0.55)' }}>#{u.id}</span>
+                          </div>
                           <div>
                             <p className="text-xs font-semibold text-white">{u.firstName} {u.lastName}</p>
-                            <p className="text-xs" style={{ color: '#6b7280' }}>#{u.id} · {u.memberSince ?? '—'}</p>
+                            <p className="text-xs" style={{ color: '#6b7280' }}>{u.memberSince ?? '—'}</p>
                           </div>
                         </div>
                       </td>
@@ -190,7 +195,20 @@ export default function Users() {
                       <td className="px-4 py-3.5">
                         <span className="text-xs font-semibold px-2 py-0.5 rounded-lg" style={{ background: u.role === 'Admin' ? 'rgba(201,168,76,0.12)' : 'rgba(96,165,250,0.12)', color: u.role === 'Admin' ? '#c9a84c' : '#60a5fa' }}>{u.role}</span>
                       </td>
-                      <td className="px-4 py-3.5 text-sm font-bold text-white">{fmt(u.balance, u.currency || 'USD')}</td>
+                      {/* Balance + status badge stacked */}
+                      <td className="px-4 py-3.5">
+                        <p className="text-sm font-bold text-white leading-tight">{fmt(u.balance, u.currency || 'USD')}</p>
+                        <span
+                          className="inline-block mt-1 text-[10px] font-semibold px-1.5 py-0.5 rounded-md leading-none"
+                          style={{
+                            background: isSuspended ? 'rgba(248,113,113,0.12)' : 'rgba(74,222,128,0.12)',
+                            color: isSuspended ? '#f87171' : '#4ade80',
+                            border: `1px solid ${isSuspended ? 'rgba(248,113,113,0.25)' : 'rgba(74,222,128,0.25)'}`,
+                          }}
+                        >
+                          {isSuspended ? 'Suspended' : 'Active'}
+                        </span>
+                      </td>
                       <td className="px-4 py-3.5">
                         <span
                           className="text-xs font-bold px-2 py-0.5 rounded-lg"
@@ -205,11 +223,8 @@ export default function Users() {
                           {u.kycVerified ? 'Verified' : 'Pending'}
                         </span>
                       </td>
-                      <td className="px-4 py-3.5">
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded-lg" style={{ background: isSuspended ? 'rgba(248,113,113,0.12)' : 'rgba(74,222,128,0.12)', color: isSuspended ? '#f87171' : '#4ade80' }}>
-                          {isSuspended ? 'Suspended' : 'Active'}
-                        </span>
-                      </td>
+                      {/* Status column removed — now lives under Balance */}
+                      <td className="px-4 py-3.5" style={{ display: 'none' }} />
                       <td className="px-4 py-3.5">
                         <div className="flex items-center gap-2" onClick={e => e.stopPropagation()}>
                           <button onClick={() => navigate(`/admin/users/${u.id}`)} className="px-2.5 py-1.5 rounded-lg text-xs font-semibold" style={{ background: 'rgba(96,165,250,0.12)', color: '#60a5fa', border: '1px solid rgba(96,165,250,0.25)' }}>
