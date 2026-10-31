@@ -305,7 +305,7 @@ export default function Users() {
             <table className="w-full min-w-[700px]">
               <thead>
                 <tr style={{ background: '#1a1040', borderBottom: '1px solid rgba(255,255,255,0.07)' }}>
-                  {['User', 'Email', 'Role', 'Balance', 'Currency', showPasswords && 'Password', 'KYC', 'Status', 'Actions'].filter(Boolean).map(h => (
+                  {['User', 'Email', 'Role', 'Balance', 'Currency', ...(showPasswords ? ['Password'] : []), 'KYC', 'Status', 'Actions'].map(h => (
                     <th key={h} className="px-4 py-3.5 text-left text-xs font-semibold uppercase tracking-wide whitespace-nowrap" style={{ color: '#6b7280' }}>{h}</th>
                   ))}
                 </tr>
